@@ -3,26 +3,20 @@
 ## Pendahuluan
 Project ini bertujuan untuk menjalankan model analisis sentimen menggunakan framework Caikit dan library HuggingFace di lingkungan Google Colab. Dalam project ini, saya mencoba mengeksekusi server gRPC dan client dalam satu sel menggunakan threading atau subprocess untuk mempermudah pengujian. Namun, eksekusi ini menemui berbagai kendala yang memerlukan analisis lebih mendalam.
 
-## Struktur Proyek
-Proyek ini memiliki struktur folder sebagai berikut:
-```
-Sentiment-Analysis-Caikit-and-HuggingFace/
-├── client.py
-├── start_runtime.py
-├── README.md
-├── requirements.txt
-├── models/
-│   └── text_sentiment/
-│        ├── config.yml
-│        ├── runtime_model/
-│        │   └── hf_module.py
-│        └── data_model/
-│            └── classification.py
-└── text_sentiment/
-     ├── __init__.py
-     └── data_model/
-         └── __init__.py
-```
+## Penjelasan Kode
+### 1. requirements.txt:
+- File ini berisi daftar dependensi yang dibutuhkan untuk menjalankan project.
+- Library utama adalah `caikit[all]==0.9.2` yang menyediakan kerangka kerja untuk inference model.
+- `scipy`, `torch`, dan `transformers` adalah library tambahan yang diperlukan untuk integrasi dengan model Hugging Face.
+### 2. start_runtime.py:
+- Script ini digunakan untuk memulai server runtime gRPC yang akan melayani permintaan inference.
+- Struktur kode melibatkan import modul, konfigurasi logging, menambahkan `text_sentiment` ke `sys.path`, dan memulai server dengan `grpc_server.main()`.
+### 3. client.py:
+- Script ini berfungsi sebagai client gRPC untuk mengirimkan permintaan ke server yang telah dijalankan oleh `start_runtime.py`.
+- Script membuat koneksi dengan server pada `localhost:8085`, membuat request dengan input teks, dan mencetak respons hasil analisis sentimen.
+
+## Modifikasi untuk Eksekusi di Google Colab
+Google Colab hanya dapat menjalankan satu sel kode secara bersamaan. Oleh karena itu, menjalankan `start_runtime.py` dan `client.py` di dua sel terpisah akan menyebabkan client tidak dapat terhubung dengan server. Solusinya adalah menjalankan server gRPC sebagai proses latar belakang di Colab.
 
 ## Analisis Kendala dan Solusi
 ### 1. Eksekusi Server dan Client secara Bersamaan
